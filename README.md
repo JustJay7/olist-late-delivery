@@ -192,7 +192,7 @@ olist-late-delivery/
 ├── data/
 │   ├── raw/                 the 9 original Olist tables
 │   └── processed/
-│       └── olist_merged_modeling.csv
+│       └── olist_final.csv
 ├── scripts/
 │   └── build_olist_model_table.py
 ├── src/
