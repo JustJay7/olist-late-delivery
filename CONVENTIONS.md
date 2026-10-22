@@ -67,8 +67,8 @@ If you're comfortable with Git or want to learn, you can clone the repository, w
 
 These are the main things to remember while working:
 
-- **Use the shared dataset and code.** The `src/` folder already contains functions for loading data, defining late deliveries, splitting the dataset, and evaluating models. Use these rather than creating separate versions so everyone's results match.
-- **Keep the same train/test split.** Don't independently filter or reshuffle orders. Use `build_population()` and `time_split()` from `src/data.py`.
+- **Shared dataset:** Everyone should use `data/processed/olist_final.csv` for their individual notebooks. No additional merging or filtering is required.
+- **Consistent modelling:** Use the agreed chronological train/test split and evaluation metrics. Don't use post-approval information as predictive features.
 - **Avoid data leakage.** We're predicting late deliveries using information available when an order is approved. Don't use actual delivery dates, review scores, or other information from after approval as model inputs. Check `config.BANNED_FEATURE_COLUMNS` for excluded columns.
 - **Don't use the test set during development.** Train and compare models using the training data and time-based cross-validation. Tasnim will run the final test evaluation once we've selected the model.
 - **Make your work reproducible.** Include your code, results, graphs, and explanations in your notebook, and check that it runs from top to bottom.
