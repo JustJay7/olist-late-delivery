@@ -14,15 +14,15 @@ RAW_DIR = ROOT / "data" / "raw"
 FIG_DIR = ROOT / "reports" / "figures"
 
 RAW_FILES = {
-    "orders": "olist_orders_dataset.csv.gz",
-    "items": "olist_order_items_dataset.csv.gz",
-    "payments": "olist_order_payments_dataset.csv.gz",
-    "reviews": "olist_order_reviews_dataset.csv.gz",
-    "products": "olist_products_dataset.csv.gz",
-    "sellers": "olist_sellers_dataset.csv.gz",
-    "customers": "olist_customers_dataset.csv.gz",
-    "geolocation": "olist_geolocation_dataset.csv.gz",
-    "category_translation": "product_category_name_translation.csv.gz",
+    "orders": "olist_orders_dataset.csv",
+    "items": "olist_order_items_dataset.csv",
+    "payments": "olist_order_payments_dataset.csv",
+    "reviews": "olist_order_reviews_dataset.csv",
+    "products": "olist_products_dataset.csv",
+    "sellers": "olist_sellers_dataset.csv",
+    "customers": "olist_customers_dataset.csv",
+    "geolocation": "olist_geolocation_dataset.csv",
+    "category_translation": "product_category_name_translation.csv",
 }
 
 ORDER_DATE_COLS = [
