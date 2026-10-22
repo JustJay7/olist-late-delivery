@@ -104,27 +104,15 @@ We split by date because the model would be used on future orders. The late rate
 
 ### 3.1 Cleaning
 ### 3.2 Feature Engineering and Table Integration
+The relevant Olist tables were integrated using `scripts/build_olist_model_table.py`, producing `data/processed/olist_merged_modeling.csv`.
 
-We integrated the relevant Olist tables into a single order-level dataset using `scripts/build_olist_model_table.py`.
+The merged dataset contains **96,456 delivered orders and 29 columns**, with one row per order. It combines orders, customers, order items, products, sellers, geolocation, and product-category translations.
 
-The merged dataset contains **96,456 delivered orders and 29 columns**, with exactly one row per order.
+Order items and seller information were aggregated to avoid duplicate order records. The resulting features describe purchase timing, customer and seller locations, product characteristics, prices, freight costs, and shipping distances.
 
-Tables used:
-- Orders: purchase, approval, and promised delivery timestamps.
-- Customers: customer locations.
-- Order Items: item quantities, prices, freight costs, and seller associations.
-- Products: product categories, weight, and dimensions.
-- Sellers: seller locations.
-- Geolocation: geographical coordinates for estimating shipping distances.
-- Category Translation: English product-category names.
+Reviews were excluded from prediction because they contain post-purchase information. Payments were excluded because their availability at approval could not be confirmed. Actual delivery dates are used only to construct the target and are excluded from model inputs.
 
-Multiple items and sellers were aggregated at the order level to prevent duplicate records.
-
-Reviews were excluded from predictive features because they are collected after purchase. Payments were excluded because their availability at the prediction point could not be established reliably.
-
-The processed dataset is stored at `data/processed/olist_merged_modeling.csv`.
-
-**Data leakage prevention:** Actual delivery timestamps are retained for calculating the target and auditing the dataset but must be excluded from model inputs. The model uses only features available at order approval.
+The modelling pipeline subsequently applies the project's existing date filters and chronological train/test split, reducing the dataset to **85,371 eligible orders**.
 
 ### 3.3 Scaling and encoding
 ### 3.4 Pipeline and leakage checks
