@@ -188,7 +188,12 @@ olist-late-delivery/
 ├── RUBRIC_CHECKLIST.md   rubric items, where each is covered, owner
 ├── DATA_LICENSE.md
 ├── requirements.txt
-├── data/raw/             the 9 Olist tables
+├── data/
+│   ├── raw/                 the 9 original Olist tables
+│   └── processed/
+│       └── olist_merged_modeling.csv
+├── scripts/
+│   └── build_olist_model_table.py
 ├── src/
 │   ├── config.py         paths, dates, seeds, banned columns
 │   ├── data.py           loading, target, filters, time split
