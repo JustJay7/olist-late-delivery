@@ -1,0 +1,20 @@
+# environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# generated, rebuilt by the notebook
+mlruns/
+mlartifacts/
+data/processed/
+reports/profiling/
+*.html
+!notebooks/olist_late_delivery.html
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
