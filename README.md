@@ -177,7 +177,7 @@ python -m pytest -q
 jupyter lab notebooks/olist_late_delivery.ipynb
 ```
 
-Run the merge script before opening the notebook. It recreates `data/processed/olist_merged_modeling.csv` from the compressed files in `data/raw/`. The notebook then loads that generated file; it does not rebuild the merge itself.
+For individual work, download the repository and load data/processed/olist_final.csv directly into your notebook. It already contains all merges, filters, and target labels (85,371 orders, 29 columns). No additional merging or filtering is needed.
 
 ## Repo layout
 
