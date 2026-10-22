@@ -44,7 +44,7 @@ It is a supervised binary classification problem. Every past order has a known o
 
 The model is trained offline and scores new orders once a day in a batch. Delivery problems play out over days, so a real-time score would not add anything. Predictions are made at `order_approved_at`, and we only use information that exists at that moment (see section 3.4).
 
-The data is tabular, built by joining the Olist order, item, product, seller, customer, payment and geolocation tables. Reviews are left out of the features because they only exist after the order is approved. The classes are imbalanced: about 1 order in 14 is late.
+The data is tabular, built by joining the relevant Olist order, item, product, seller, customer, geolocation, and product-category translation tables. Payments and reviews are excluded from predictive features because their availability at order approval cannot be reliably established.
 
 ### 1.6 How we measure performance
 
