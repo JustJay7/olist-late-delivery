@@ -1,18 +1,39 @@
 # Team conventions
 
-Read this before your first commit. These rules exist so the final notebook can be assembled
-in one day without rework.
+Read this before starting your work. You can work locally and upload through GitHub's website, or use Git if you prefer. These rules help us keep everyone's work consistent when combining it into the final notebook.
 
 ## 1. Setup (once)
 
+You don't need to know Git to contribute.
+
+1. Open the GitHub repository and click **Code → Download ZIP**.
+2. Extract the ZIP on your computer.
+3. Open the project folder in VS Code, JupyterLab, or your preferred editor.
+4. Set up Python 3.12 and install the dependencies using the instructions for your operating system.
+
+**macOS / Linux:**
+
 ```bash
-git clone <repo-url>
-cd olist-late-delivery
 python3.12 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-pytest -q                          # must print "8 passed"
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pytest -q
 ```
+
+**Windows (PowerShell):**
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pytest -q
+```
+
+If PowerShell blocks activation, use `.\.venv\Scripts\python.exe` instead of `python` for the remaining commands.
+
+All 8 tests should pass. If anything fails, share the error in the group chat.
+
+If you're already familiar with Git, you can clone the repository instead of downloading the ZIP. Both approaches are fine.
 
 ## 2. Where your work goes
 
@@ -29,16 +50,42 @@ pytest -q                          # must print "8 passed"
 | Figures for README and slides | `reports/figures/<section>_<name>.png` | Anyone |
 | Final graded notebook and README | `notebooks/olist_late_delivery.ipynb`, `README.md` | Jay |
 
-Nobody else edits the final notebook. Notebooks do not merge cleanly in Git, so you hand over
-functions in `src/` plus a short note of which cells to add, and Jay integrates them.
+Nobody else edits the final notebook. Everyone works on their assigned section locally and uploads their notebook to wip/. If your work includes reusable functions in src/, upload those too. Jay will review and integrate everyone's code, graphs, and explanations into the final notebook and README.
 
-## 3. Git
+## 3. Sharing your work
 
-- One branch per person per task: `<name>/<topic>` (e.g. `mia/seller-history`).
-- Open a pull request into `main`; Jay reviews and merges.
-- Run `pytest -q` before opening a pull request.
-- Commit messages say what changed: `Add point-in-time seller late rate`, not `update`.
-- Never commit `mlruns/`, `.venv/`, or anything in `.gitignore`.
+### Option 1: Work locally and upload (recommended)
+
+No Git knowledge required.
+
+1. Download the repository ZIP and work on your assigned section locally.
+2. Save your notebook inside `wip/`, using your name (e.g., `wip/hasan_eda.ipynb`).
+3. When ready, open the `wip/` folder on GitHub.
+4. Click **Add file → Upload files**, select your notebook, and commit the upload.
+5. Jay will review the contributions and integrate them into the final notebook and README.
+
+Upload updated versions periodically so GitHub records your progress, not just your final submission.
+
+If your work includes changes to `src/` or other shared files, upload those files in their original folders too, and inform Jay so nothing gets overwritten. Do not overwrite another teammate's work.
+
+### Option 2: Use Git (optional)
+
+If you're familiar with Git or want to learn:
+
+- Clone the repository.
+- Create a branch for your work, e.g., `mia/seller-history`.
+- Commit your changes with descriptive messages.
+- Run the tests before submitting.
+- Open a pull request into `main` for Jay to review and merge.
+
+### Rules for everyone
+
+- Use the shared functions in `src/` and follow the coding and leakage rules below.
+- Keep all code, graphs, results, and explanations reproducible.
+- Make sure your notebook runs from top to bottom.
+- Don't edit the final notebook or another teammate's files.
+- Don't evaluate models on the test set during development. Only Tasnim runs the final evaluation, once the model has been selected.
+- Never upload `.venv/`, `mlruns/`, or files excluded by `.gitignore`.
 
 ## 4. Code rules
 
