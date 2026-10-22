@@ -18,7 +18,13 @@ NAMES = {
 }
 
 def build(folder:Path, include_payments=False):
-    def read(k): return pd.read_csv(folder/NAMES[k],low_memory=False)
+    def read(k):
+        path = folder / NAMES[k]
+        if not path.exists():
+            path = folder / (NAMES[k] + '.gz')
+        if not path.exists():
+            raise FileNotFoundError(f'Missing {k} table (.csv or .csv.gz) under {folder}')
+        return pd.read_csv(path, low_memory=False)
     orders=read('orders'); customers=read('customers'); items=read('items')
     products=read('products'); sellers=read('sellers'); translation=read('translation')
     geo=read('geo')
@@ -87,8 +93,8 @@ def build(folder:Path, include_payments=False):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser()
-    p.add_argument('--data-dir',type=Path,default=Path('.'))
-    p.add_argument('--output',type=Path,default=Path('merged_olist_orders.csv'))
+    p.add_argument('--data-dir',type=Path,default=Path(__file__).resolve().parents[1] / 'data' / 'raw')
+    p.add_argument('--output',type=Path,default=Path(__file__).resolve().parents[1] / 'data' / 'processed' / 'olist_merged_modeling.csv')
     p.add_argument('--include-payments',action='store_true',help='Only if payment data is demonstrably available at approval')
     a=p.parse_args()
     d=build(a.data_dir,a.include_payments)
@@ -97,4 +103,4 @@ if __name__=='__main__':
     print('Saved:',a.output)
     print('IMPORTANT: drop order_id, customer_id, purchase/approval raw timestamps, actual delivery date,')
     print('and estimated delivery date before model fitting (use engineered promise window instead).')
-    print('For evaluation use a chronological split by order_approved_at, then never use it as a feature.')
+    print('For evaluation use the project chronological split by order_purchase_timestamp (src/data.py).')

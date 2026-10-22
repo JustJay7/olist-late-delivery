@@ -6,7 +6,7 @@ the README in the same commit. All figures below were produced by `src/data.py` 
 
 | ID | Decision | Choice | Why |
 |---|---|---|---|
-| D1 | Unit of analysis | One row per order | The intervention (escalate, nudge seller, warn customer) happens per order. Item, seller and payment tables are aggregated to order level. |
+| D1 | Unit of analysis | One row per order | The intervention (escalate, nudge seller, warn customer) happens per order. Item and seller tables are aggregated to order level. Payment data is excluded from current predictive features pending confirmation of approval-time availability. |
 | D2 | Population | Status `delivered`, has approval and delivery dates, purchased from 2017-01-01 | Only delivered orders have a label. 2016 holds a few hundred orders and is too sparse. |
 | D3 | Target | `is_late = 1` if delivered on a later **calendar day** than the promised date | The promised date has no time of day (always 00:00). Comparing timestamps would mark an order delivered on the promised day as late, which inflates the late rate from 6.8% to 8.1%. |
 | D4 | Censoring rule | Drop orders promised after 2018-08-01 (snapshot 2018-08-31 minus 30 days) | Recorded deliveries collapse after 30 Aug 2018, so late orders promised near the end are never seen as delivered. 95% of late orders arrive within 31 days of the promise. Without this rule, the most recent months look artificially on time. |

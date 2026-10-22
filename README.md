@@ -36,7 +36,7 @@ The model only ranks orders so people know where to look. It does not change del
 
 ### 1.4 What Olist does today
 
-There is no risk score per order. Olist's safeguard is to pad every estimate: the median promised window is 24 days, while the median delivery actually takes 10. That works for the average order, but it treats every order the same. Even with the padding, the late rate hit 12.4% in November 2017, 14.1% in February 2018 and 19.0% in March 2018.
+The public dataset does not document whether Olist had an internal order-level risk score. One observable safeguard is the generous promised delivery window: the median promised window is 24 days, while the median delivery actually takes 10. That works for the average order, but it treats every order the same. Even with the padding, the late rate hit 12.4% in November 2017, 14.1% in February 2018 and 19.0% in March 2018.
 
 ### 1.5 How we framed the problem
 
@@ -167,16 +167,17 @@ The modelling pipeline subsequently applies the project's existing date filters 
 Needs Python 3.12.
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/JustJay7/olist-late-delivery.git
 cd olist-late-delivery
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pytest -q
+python scripts/build_olist_model_table.py
+python -m pytest -q
 jupyter lab notebooks/olist_late_delivery.ipynb
 ```
 
-Run the notebook from top to bottom. Everything is rebuilt from the files in `data/raw/`.
+Run the merge script before opening the notebook. It recreates `data/processed/olist_merged_modeling.csv` from the compressed files in `data/raw/`. The notebook then loads that generated file; it does not rebuild the merge itself.
 
 ## Repo layout
 
@@ -197,8 +198,9 @@ olist-late-delivery/
 ├── src/
 │   ├── config.py         paths, dates, seeds, banned columns
 │   ├── data.py           loading, target, filters, time split
+│   ├── integration.py    joins approved candidate features
 │   └── evaluation.py     metrics and cross-validation used by every model
-├── tests/                checks for the target, split and metrics
+├── tests/                checks for the target, split, integration and metrics
 ├── notebooks/            final notebook and its HTML export
 ├── wip/                  everyone's working notebooks
 ├── reports/figures/      figures for the README and slides

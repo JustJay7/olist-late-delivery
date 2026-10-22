@@ -26,7 +26,7 @@ python -m pip install -r requirements.txt
 
 If PowerShell blocks activation, use `.\.venv\Scripts\python.exe -m pip install -r requirements.txt` instead.
 
-Once installed, run `python -m pytest -q` to check the setup. All 8 tests should pass.
+Once installed, run `python -m pytest -q` to check the setup. All tests should pass.
 
 If anything doesn't work, just ask in the group chat.
 
