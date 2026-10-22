@@ -26,7 +26,7 @@ def build(folder:Path, include_payments=False):
         orders[c]=pd.to_datetime(orders[c],errors='coerce')
     # Scope: prediction is made at approval. Labels can only be calculated on completed deliveries.
     orders=orders.loc[orders.order_status.eq('delivered') & orders.order_approved_at.notna() & orders.order_delivered_customer_date.notna() & orders.order_estimated_delivery_date.notna()].copy()
-    orders['is_late']=(orders.order_delivered_customer_date>orders.order_estimated_delivery_date).astype('int8')
+    orders['is_late']=(orders.order_delivered_customer_date.dt.normalize()>orders.order_estimated_delivery_date.dt.normalize()).astype('int8')
     orders['promised_days_from_approval']=(orders.order_estimated_delivery_date-orders.order_approved_at).dt.total_seconds()/86400
     orders['approval_lag_hours']=(orders.order_approved_at-orders.order_purchase_timestamp).dt.total_seconds()/3600
     orders['purchase_month']=orders.order_purchase_timestamp.dt.month
