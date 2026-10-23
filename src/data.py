@@ -14,6 +14,8 @@ def load_raw(name: str) -> pd.DataFrame:
         raise KeyError(f"Unknown table '{name}'. Options: {sorted(config.RAW_FILES)}")
     path = config.RAW_DIR / config.RAW_FILES[name]
     if not path.exists():
+        path = path.with_name(path.name + ".gz")  # raw tables are committed gzipped (D12)
+    if not path.exists():
         raise FileNotFoundError(f"Missing raw file: {path}")
     parse = config.ORDER_DATE_COLS if name == "orders" else None
     return pd.read_csv(path, parse_dates=parse)
