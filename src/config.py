@@ -50,6 +50,10 @@ CENSOR_BUFFER_DAYS = 30
 # Train on the past, test on the future, as the model would be used in production.
 TEST_START = pd.Timestamp("2018-04-01")
 N_CV_SPLITS = 5  # TimeSeriesSplit folds inside the training period
+# Orders bought just before a validation fold were mostly not delivered yet when the fold
+# starts, so their labels would not be known in practice. Skipping ~2,000 orders (about two
+# weeks; median delivery takes 10 days) keeps training labels realistic. Matches Fidan's benchmark.
+CV_GAP = 2000
 
 # ---------------------------------------------------------------- evaluation (D8)
 TARGET = "is_late"

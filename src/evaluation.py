@@ -47,11 +47,11 @@ def scorers() -> dict:
 
 
 def cv_splitter() -> TimeSeriesSplit:
-    """The one CV strategy for the project: expanding-window time-series folds.
+    """The one CV strategy for the project: expanding-window time-series folds with a gap.
 
     Data must be sorted by purchase time, which build_population() guarantees.
     """
-    return TimeSeriesSplit(n_splits=config.N_CV_SPLITS)
+    return TimeSeriesSplit(n_splits=config.N_CV_SPLITS, gap=config.CV_GAP)
 
 
 def summarize_cv(cv_results: dict, model_name: str) -> pd.DataFrame:

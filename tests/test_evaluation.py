@@ -27,8 +27,8 @@ def test_recall_at_budget_fails_loudly():
 def test_scorers_run_through_cross_validate():
     # Synthetic rare-class data, only to prove the scorers work end to end.
     rng = np.random.default_rng(config.RANDOM_STATE)
-    X = rng.normal(size=(2000, 3))
-    y = (X[:, 0] + rng.normal(scale=1.5, size=2000) > 2.2).astype(int)
+    X = rng.normal(size=(20000, 3))
+    y = (X[:, 0] + rng.normal(scale=1.5, size=20000) > 2.2).astype(int)
     res = cross_validate(LogisticRegression(), X, y, cv=cv_splitter(), scoring=scorers())
     table = summarize_cv(res, "logit")
     assert {"pr_auc_mean", "pr_auc_std", "recall_top10_mean", "roc_auc_mean"} <= set(table.columns)
