@@ -1,0 +1,30 @@
+column,source_table,known_at_approval,type,bounds,pct_missing,n_unique,min,median,max,skew,pct_iqr_outliers,noise_quality,distribution,auc_mean,auc_std,usefulness
+order_id,orders,Y,str (hash),—,0.0,64038,,,,,,Unique key,—,,,Exclude (ID)
+customer_id,orders,Y,str (hash),—,0.0,64038,,,,,,"Unique per order, so no customer history",—,,,Exclude (ID)
+order_purchase_timestamp,orders,Y,datetime,2017-01-05 → 2018-03-31,0.0,63678,,,,,,None observed,"Rising volume, Nov 2017 peak",,,Exclude (raw; use derived features)
+order_approved_at,orders,Y,datetime,2017-01-05 → 2018-04-03,0.0,60016,,,,,,None observed,Tracks purchase time,,,Exclude (raw; use derived features)
+order_delivered_customer_date,orders,N,datetime,—,0.0,63497,,,,,,Post-outcome,—,,,Exclude (leakage)
+order_estimated_delivery_date,orders,Y,date (no time of day),2017-02-01 → 2018-07-12,0.0,321,,,,,,"Day precision, hence the calendar-day target (D3)",—,,,Exclude (raw; use derived features)
+is_late,"orders (derived, D3)",N,binary int,"{0, 1}",0.0,2,0.0,0.0,1.0,3.1014617287506905,,Calendar-day rule (D3),"Bernoulli, p = 0.080",,,Target
+promised_days_from_approval,orders (derived),Y,"float, continuous",> 0,0.0,60493,0.4959027777777778,23.364328703703706,153.5760300925926,1.2517687621137945,2.1908866610450044,Right tail to 154 days,"Bell-shaped core (median 23.4 d), right tail",0.4916289840183251,0.029625733552279616,Low
+approval_lag_hours,orders (derived),Y,"float, continuous",≥ 0,0.0,22516,0.0,0.3030555555555556,741.4436111111111,5.170937373077927,10.976295324650987,Extreme tail to 741 h,"Two groups: most approved within 1 h, a second group after ~1–2 days",0.5397999534577286,0.014725366512477085,Medium
+purchase_month,orders (derived),Y,"int, cyclical",1–12,0.0,12,1.0,6.0,12.0,0.16901620182865004,0.0,"Jan–Mar appear twice (2017 and 2018), other months once",Uneven,0.5187638836515547,0.030314783553732,Low
+purchase_weekday,orders (derived),Y,"int, cyclical",0–6 (Mon = 0),0.0,7,0.0,3.0,6.0,0.14120502881872468,0.0,None observed,"Near-uniform, fewer weekend orders",0.5208915052614932,0.01698894278744222,Low
+purchase_hour,orders (derived),Y,"int, cyclical",0–23,0.0,24,0.0,15.0,23.0,-0.6159714401221551,0.0,None observed,"Daytime plateau, overnight trough",0.5112562696936463,0.00918251654069965,Low
+approval_month,orders (derived),Y,"int, cyclical",1–12,0.0,12,1.0,6.0,12.0,0.17125118607639442,0.0,Equals purchase_month for 98.2% of orders,Same as purchase_month,0.5184302229410351,0.028446558671931257,Low
+customer_zip_code_prefix,customers,Y,"int stored, nominal code",1004–99980,0.0,13584,,,,,,Numeric value has no meaning,"13,584 levels, long tail",0.5547069253776679,0.020929184456931236,Medium
+customer_state,customers,Y,categorical,27 states,0.0,27,,,,,,None observed,"SP 40%, RJ 13%, MG 12%",0.6325523394371302,0.023376104362195022,High
+item_count,order_items (aggregated),Y,"int, count",≥ 1,0.0,16,1.0,1.0,21.0,8.168376287553555,0.0,Few large baskets (max 21),90% single-item,0.5024504757788748,0.014373936256797119,Low
+distinct_product_count,order_items (aggregated),Y,"int, count",≥ 1,0.0,7,1.0,1.0,7.0,7.685995565912703,0.0,—,97% single-product,0.5082362440214346,0.0022854828917361586,Low
+seller_count,order_items (aggregated),Y,"int, count",≥ 1,0.0,5,1.0,1.0,5.0,10.706200277308971,0.0,"Multi-seller orders rarely late (small sample, see §4)",98.9% single-seller,0.5055661312865267,0.0010444400100705423,Low
+total_price,order_items (aggregated),Y,"float, continuous (BRL)",> 0,0.0,5636,2.29,85.0,13440.0,11.050402259345455,7.876573284612262,"Outliers to R$13,440","Log-normal, right-skewed",0.5353180625808724,0.011987441408390722,Medium
+total_freight,order_items (aggregated),Y,"float, continuous (BRL)",≥ 0,0.0,6029,0.0,16.74,1002.29,8.742184965886404,9.720790780474093,"10 zero-freight orders (free shipping); outliers to R$1,002",Log-normal with a spike at 0,0.5838663456368037,0.013745883501900992,High
+mean_product_weight_g,products (aggregated),Y,"float, continuous",> 0,0.024985165058246668,2207,2.0,700.0,40425.0,3.5948622118220186,14.399737590203369,Seller-entered; heaped at round values,"Log-normal, heaped",0.5370515731380365,0.022920426111718226,Medium
+max_product_weight_g,products (aggregated),Y,"float, continuous",> 0,0.024985165058246668,1767,2.0,700.0,40425.0,3.5679897830647476,14.551248008497078,Identical to mean for single-product orders,"Log-normal, heaped",0.5360261272640405,0.022816323935813256,Medium
+total_product_volume_cm3,products (aggregated),Y,"float, continuous",≥ 0,0.0,4915,0.0,7744.0,1476000.0,7.6530930369840515,9.814485149442518,"16 orders stored as 0 (missing product dimensions); outliers to 1,476,000 cm³",Log-normal,0.5238244204886702,0.02019496277346752,Low
+mean_distance_km,geolocation + sellers + customers,Y,"float, continuous",≥ 0,0.5153190293263374,60458,0.0,451.7073858015503,8032.929716978941,1.6791812081806412,8.146543605198719,"Straight-line between zip centroids; 3 values > 4,500 km (beyond Brazil, geocoding errors)","Right-skewed, cluster of short SP→SP trips",0.5910872280032865,0.023280681354967674,High
+max_distance_km,geolocation + sellers + customers,Y,"float, continuous",≥ 0,0.5153190293263374,60409,0.0,452.8835680615358,8032.929716978941,1.6769480918338822,8.157531236265461,Equals mean for 98% of orders,Same as mean_distance_km,0.5902922725403211,0.02327011432510533,High
+same_state_item_share,sellers + customers,Y,"float, bounded",0–1,0.0,9,0.0,0.0,1.0,0.6811205518942237,0.0,Effectively binary (99.8% are 0 or 1),"Two spikes, at 0 and 1",0.5706847392023786,0.041046514736090514,Medium
+any_seller_state,sellers,Y,categorical,22 states,0.0,22,,,,,,One state even for multi-seller orders,SP 71%,0.5127722079870046,0.02093186654539037,Low
+primary_product_category,products + category_translation,Y,categorical,71 levels,1.8254786220681471,71,,,,,,Long tail of rare categories,Long-tailed,0.5132474456344626,0.01173014760364039,Low
+freight_to_price_ratio,order_items (derived),Y,"float, continuous",≥ 0,0.0,27087,0.0,0.2241645244215938,5.739495798319327,3.715917618094406,6.786595458946251,Explodes for very cheap items (max 5.7×),Right-skewed,0.48828418902433635,0.012175692675113306,Low

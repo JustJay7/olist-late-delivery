@@ -1,0 +1,12 @@
+issue,column,orders_in_train,recommended_handling,pct_of_train
+Missing distance (zip prefix not in geolocation table),mean/max_distance_km,330,Impute median inside the pipeline + add a missing flag,0.5153190293263374
+Missing product category,primary_product_category,1169,Own level 'unknown',1.8254786220681471
+Missing product weight,mean/max_product_weight_g,16,Impute median inside the pipeline,0.024985165058246668
+"Distance > 4,500 km (beyond Brazil's extent: geocoding error)",mean/max_distance_km,3,"Set to NaN, then impute",0.00468471844842125
+Volume stored as 0 (missing product dimensions; same orders as missing weight),total_product_volume_cm3,16,"Set to NaN, then impute",0.024985165058246668
+Zero distance (seller and customer share a zip prefix),mean_distance_km,13,Plausible; keep,0.020300446609825416
+Zero freight (free shipping),total_freight,10,Plausible; keep (log1p handles 0),0.015615728161404167
+Approval lag > 7 days,approval_lag_hours,59,Keep; log1p + cap,0.09213279615228458
+Promised window > 60 days,promised_days_from_approval,144,Keep; cap,0.22486648552422
+approval_month differs from purchase_month,approval_month,1156,Redundant; drop approval_month,1.8051781754583214
+Multi-seller orders rarely late (only 12 late in train),seller_count,720,"Real pattern but tiny sample; keep as a flag, don't over-read",1.1243324276211
