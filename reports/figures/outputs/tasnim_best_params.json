@@ -1,0 +1,30 @@
+{
+  "final_model": "LR (tuned, no month)",
+  "drop_purchase_month": {
+    "LR": true,
+    "RF": true,
+    "HGB": true
+  },
+  "LR (tuned)": {
+    "clf__C": 0.15728326259078687,
+    "clf__class_weight": null,
+    "clf__penalty": "l1",
+    "pre__categories__onehot__min_frequency": 20
+  },
+  "RF (tuned)": {
+    "clf__class_weight": "balanced_subsample",
+    "clf__max_depth": 12,
+    "clf__max_features": "sqrt",
+    "clf__max_samples": null,
+    "clf__min_samples_leaf": 18
+  },
+  "HGB (tuned)": {
+    "clf__class_weight": null,
+    "clf__l2_regularization": 4.86964094152089,
+    "clf__learning_rate": 0.01351182947645082,
+    "clf__max_features": 0.4371880036934016,
+    "clf__max_iter": 395,
+    "clf__max_leaf_nodes": 27,
+    "clf__min_samples_leaf": 227
+  }
+}

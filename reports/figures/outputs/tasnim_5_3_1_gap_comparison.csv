@@ -1,0 +1,9 @@
+,"First locked run (no gap, 64,038 orders)","Official run (gap, 62,038 orders)"
+Final PR-AUC,0.13103504123567689,0.1260767394450496
+Final lift,3.191062254201707,3.070314021211465
+Final recall@10%,0.3744292237442922,0.3607305936073059
+Late orders caught (final),328,316
+B1 recall@10%,0.341324200913242,0.3356164383561644
+Late orders caught (B1),299,294
+PR-AUC gain over B1 (95% CI),+0.021 (+0.010 to +0.031),+0.017 (+0.006 to +0.027)
+Recall@10% gain over B1 (95% CI),+0.033 (+0.007 to +0.060),+0.025 (-0.004 to +0.048)
