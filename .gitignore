@@ -12,9 +12,12 @@ mlartifacts/
 data/processed/
 reports/profiling/
 *.html
-!notebooks/olist_late_delivery.html
+!notebooks/*.html
 
 # OS / editor
 .DS_Store
 .idea/
 .vscode/
+
+# raw data is committed gzipped only (D12)
+data/raw/*.csv

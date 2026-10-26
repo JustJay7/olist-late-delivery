@@ -34,24 +34,24 @@ If anything doesn't work, just ask in the group chat.
 
 | Person | Responsibility | Where to save |
 |---|---|---|
-| Jay | Shared dataset, evaluation code, README, final integration | `src/`, `notebooks/`, `README.md` |
-| Hasan | Exploratory data analysis | `wip/hasan_eda.ipynb` |
-| Mia | Cleaning, feature engineering, preprocessing | `wip/mia_preprocessing.ipynb` |
-| Fidan | Baselines and model comparison | `wip/fidan_benchmark.ipynb` |
-| Jingyu | Feature importance and error analysis | `wip/jingyu_errors.ipynb` |
-| Tasnim | Tuning, ensembles, final evaluation | `wip/tasnim_tuning.ipynb` |
+| Jay | Shared dataset, evaluation code, feature iteration, README, final integration | `src/`, `notebooks/01_frame_the_problem.ipynb`, `notebooks/04c_feature_iteration.ipynb`, `README.md` |
+| Hasan | Exploratory data analysis | `notebooks/02_explore_the_data.ipynb` |
+| Mia | Cleaning, feature engineering, preprocessing | `notebooks/03_prepare_the_data.ipynb` |
+| Fidan | Baselines and model comparison | `notebooks/04a_compare_models.ipynb` |
+| Jingyu | Feature importance and error analysis | `notebooks/04b_interpretation_and_errors.ipynb` |
+| Tasnim | Tuning, ensembles, final evaluation | `notebooks/05_fine_tune.ipynb` |
 | Peace | Presentation | `slides/` |
 
 Everyone can work in their own notebook. There's no need to write separate Python modules unless you want to. If you've created reusable functions in `src/`, share those too.
 
-Please don't edit `notebooks/olist_late_delivery.ipynb` directly. That's where I'll combine everyone's work.
+All work has been moved from `wip/` into `notebooks/`, numbered in rubric order. Please don't edit them directly; send changes to Jay.
 
 ## 3. How to share your work
 
 **Option 1: Upload through GitHub (easiest)**
 
-1. Complete your section locally and save your notebook in `wip/`.
-2. Open the repository on GitHub and navigate to `wip/`.
+1. Complete your section locally.
+2. Open the repository on GitHub and navigate to `notebooks/`.
 3. Click **Add file → Upload files** and select your notebook.
 4. Click **Commit changes** to save it.
 
