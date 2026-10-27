@@ -52,7 +52,7 @@ Owner: Peace. v4, 26 Oct 2026. Matches the deck `slides/olist_late_delivery_pres
 
 ### 6. Our process, end to end, with no peeking at the future (0:35)
 *Rubric: Process (end-to-end, concise)*
-- Six stages with owners: Frame (Jay), Explore (Hasan), Prepare (Mia), Compare 7 models (Fidan, Jingyu), Tune + ensembles (Tasnim), Test once (Tasnim).
+- Six stages: Frame, Explore, Prepare, Compare 7 models, Tune + ensembles, Test once.
 - Time split: train Jan 2017–Mar 2018 (64,038 orders, 8.0% late) | 2,000-order gap | test Apr–Jul 2018 (21,333, 4.1% late).
 - One leak-free pipeline refitted inside every fold (103 inputs); 5-fold time-series CV with the same gap; a random split would have flattered us (27.7% vs the honest 23.7% recall).
 - Source: README 3, 4.4, DECISIONS D6–D7.
