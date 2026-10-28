@@ -6,7 +6,7 @@ INSY 674, McGill, Fall 2026. Final group project.
 |---|---|---|
 | Jay Malhotra | 261308594 | Project lead: framing, repo and shared code, feature iteration (4.4), integration |
 | Hasan Malik | 261360960 | Exploring the data (2) |
-| Mia Scalabrin | | Preparing the data (3) |
+| Mia Scalabrin | 261317371 | Preparing the data (3) |
 | Fidan Shiraliyeva | | Model comparison and shortlist (4.1, 4.5) |
 | Jingyu Wu | | Interpretation and error analysis (4.2, 4.3) |
 | Tasnim Hassan | 261343745 | Tuning, ensembles and final test evaluation (5) |
