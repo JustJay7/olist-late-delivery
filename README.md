@@ -9,7 +9,7 @@ INSY 674, McGill, Fall 2026. Final group project.
 | Mia Scalabrin | | Preparing the data (3) |
 | Fidan Shiraliyeva | | Model comparison and shortlist (4.1, 4.5) |
 | Jingyu Wu | | Interpretation and error analysis (4.2, 4.3) |
-| Tasnim Hassan | | Tuning, ensembles and final test evaluation (5) |
+| Tasnim Hassan | 261343745 | Tuning, ensembles and final test evaluation (5) |
 | Peace Isaac | | Presentation and slides |
 
 <!-- Jay: fill in the remaining student IDs before submission. -->
