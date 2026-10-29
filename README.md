@@ -1,6 +1,6 @@
 # Predicting late deliveries on Olist
 
-INSY 674, McGill, Fall 2026. Final group project.
+INSY 674, McGill, Fall 2026. Final group project, Group 9.
 
 | Name | Student ID | Role |
 |---|---|---|
