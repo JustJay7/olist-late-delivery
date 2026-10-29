@@ -1,7 +1,7 @@
 """Loading, target definition, population and train/test split.
 
-These functions encode the problem definition (DECISIONS.md D1 to D7). Feature
-engineering lives in src/features.py and must start from build_population().
+These functions encode the problem definition (DECISIONS.md D1 to D7). Order-level
+features are joined to this population in src/integration.py.
 """
 import pandas as pd
 

@@ -89,7 +89,7 @@ Owner: Peace. v4, 26 Oct 2026. Matches the deck `slides/olist_late_delivery_pres
 ### 11. Promise and distance drive the risk; "ordinary" late orders stay invisible (0:50)
 *Rubric: Insights and error analysis*
 - Test-set permutation importance: promised days, distance, customer state, freight, same-state share. A promise 1 SD longer roughly halves the odds of being late (×0.52).
-- Error analysis (last CV fold, Feb–Mar 2018, before tuning): missed late orders look ordinary, shorter than the ones caught (727 vs 1,011 km). All 3 shortlisted models miss the same 66%.
+- Error analysis (last CV fold, Feb–Mar 2018, before tuning): missed late orders look ordinary, shorter than the ones caught (727 vs 1,011 km). All 3 shortlisted models miss 66%, but at a 10% budget even a perfect model would miss 47% on this fold.
 - What a person would have needed: the carrier hand-off, carrier backlogs, strikes and holidays, the network-wide delay.
 - Source: README 4.3, 5.4.
 
@@ -106,7 +106,7 @@ Owner: Peace. v4, 26 Oct 2026. Matches the deck `slides/olist_late_delivery_pres
 - Actions: score nightly and review the top 10%; track recall monthly and retrain quarterly; invest in new data.
 - Source: README 6.
 
-### 14. Thank you · Questions?
+### 14. Thank you, questions?
 - Repo link and the contributor list from the GitHub repo (names, handles and roles).
 
 **Total presented: 9:10**

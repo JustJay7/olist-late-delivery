@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>tasnim_tuning</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>05_fine_tune</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7558,7 +7558,7 @@ a.anchor-link {
 </table>
 <p><strong>Inputs from teammates.</strong> Preprocessing pipeline from Mia (section 3.4), shortlist from Fidan (section 4.5: Logistic Regression, Random Forest, HistGradientBoosting), error overlap from Jingyu (section 4.3.4), which showed the three models catch partly different late orders and so motivated the ensemble test.</p>
 <p><strong>Ground rules (DECISIONS.md).</strong> Training period only until 5.3 (D6). All CV uses the shared <code>cv_splitter()</code> and <code>scorers()</code> from <code>src/evaluation.py</code> (D7, D8). Selection metric is PR-AUC (CONVENTIONS §5). Only approval-time features (D5).</p>
-<p><strong>Runtime:</strong> about 60 minutes on a 2-core machine (the three searches are 450 model fits). Every random step uses <code>config.RANDOM_STATE</code>, so a rerun reproduces these numbers.</p>
+<p><strong>Runtime:</strong> about 95 minutes on a 2-core machine (93.9 minutes on the last full run) (the three searches are 450 model fits). Every random step uses <code>config.RANDOM_STATE</code>, so a rerun reproduces these numbers.</p>
 </div>
 </div>
 </div>
@@ -7592,7 +7592,7 @@ a.anchor-link {
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">loguniform</span><span class="p">,</span> <span class="n">randint</span><span class="p">,</span> <span class="n">uniform</span>
 
-<span class="c1"># Make `src` importable whether the notebook runs from wip/ or the repo root.</span>
+<span class="c1"># Make `src` importable whether the notebook runs from notebooks/ or the repo root.</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="n">ROOT</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">parent</span>
@@ -7616,8 +7616,8 @@ a.anchor-link {
                                    <span class="n">StandardScaler</span><span class="p">)</span>
 
 <span class="n">RS</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">RANDOM_STATE</span>  <span class="c1"># 42, shared seed</span>
-<span class="n">FIG_DIR</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"reports"</span> <span class="o">/</span> <span class="s2">"figures"</span> <span class="o">/</span> <span class="s2">"tasnim"</span>
-<span class="n">OUT_DIR</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"reports"</span> <span class="o">/</span> <span class="s2">"figures"</span> <span class="o">/</span> <span class="s2">"outputs"</span>
+<span class="n">FIG_DIR</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"reports"</span> <span class="o">/</span> <span class="s2">"figures"</span> <span class="o">/</span> <span class="s2">"fine_tune"</span>
+<span class="n">OUT_DIR</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"reports"</span> <span class="o">/</span> <span class="s2">"outputs"</span>
 <span class="n">FIG_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">OUT_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -9065,7 +9065,7 @@ HGB (tuned): class_weight=None, l2_regularization=4.8696, learning_rate=0.0135, 
 <li><strong>Logistic regression is still best, and its tuning gain is small but consistent.</strong> Every metric moved the right way and overfitting fell (1.52 → 1.39). The search chose an L1 penalty, which switches off inputs the model does not need (5.4 shows how many). The top eight LR configurations all score 0.160 to 0.161, whether L1 or L2, weighted or not. That is a flat plateau: LR was already close to its best, and which configuration wins is close to arbitrary. We read the gain as "at least as good and more stable", not as a breakthrough.</li>
 <li><strong>Class weighting does not matter for ranking.</strong> Weighted and unweighted configurations are interleaved in LR's top eight. Reweighting mainly shifts the intercept, which moves every score together and leaves the order unchanged.</li>
 <li><strong>Regularisation helped boosting the most.</strong> HGB's best settings are slow (learning rate 0.014), coarse (≥ 227 orders per leaf), heavily L2-penalised and feature-subsampled. That cut its overfitting ratio from 12.0 to 4.9 and raised validation lift by 8%.</li>
-<li><strong>The scatter plot is the key finding here.</strong> Across all 90 trials, training-fold lift ranges from about 1.2× to over 20×. Validation lift stays in a narrow band of about 1.1 to 1.9× for every family. More model capacity buys memorisation, not generalisation. <strong>The ceiling is set by the information in the features, not by the algorithm or its settings.</strong> This matches Jingyu's 4.3.4 result that 62.7% of late orders were missed by all three models. It also points to where the next gain is: changing <em>what the model sees</em>. 5.1.6 tests exactly that.</li>
+<li><strong>The scatter plot is the key finding here.</strong> Across all 90 trials, training-fold lift ranges from about 1.2× to over 20×. Validation lift stays in a narrow band of about 1.1 to 1.9× for every family. More model capacity buys memorisation, not generalisation. <strong>The ceiling is set by the information in the features, not by the algorithm or its settings.</strong> This matches Jingyu's 4.3.4 result that 66.2% of the last fold's late orders were missed by all three models (partly because a 10% budget could flag at most 53% of that fold's late orders). It also points to where the next gain is: changing <em>what the model sees</em>. 5.1.6 tests exactly that.</li>
 <li><strong>What did not work:</strong> native categorical splits for HGB (0.143 vs 0.146 with one-hot). With 71 product categories, native splits let each tree carve out category groups that fit the training months (train/val lift 6.3) and do not transfer. One-hot with rare-category grouping is kept.</li>
 <li><strong>Caveat:</strong> the best of N random trials is slightly optimistic as an estimate of performance. That is one reason the final model is judged only on the untouched test set (5.3).</li>
 </ol>
@@ -9500,7 +9500,7 @@ HGB (tuned): class_weight=None, l2_regularization=4.8696, learning_rate=0.0135, 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.2-Ensembles">5.2 Ensembles<a class="anchor-link" href="#5.2-Ensembles">¶</a></h2><p>Jingyu's overlap analysis (4.3.4) found that on the last fold each model caught some late orders the others missed (LR 140, RF 75, HGB 105 uniquely). Whether that translates into a better <strong>single ranking</strong> under a fixed review budget is an empirical question, so we test it with the same CV.</p>
+<h2 id="5.2-Ensembles">5.2 Ensembles<a class="anchor-link" href="#5.2-Ensembles">¶</a></h2><p>Jingyu's overlap analysis (4.3.4) found that on the last fold each model caught some late orders the others missed (LR 163, RF 60, HGB 72 uniquely). Whether that translates into a better <strong>single ranking</strong> under a fixed review budget is an empirical question, so we test it with the same CV.</p>
 <p><strong>Ensembles tried (all built from the tuned configurations):</strong></p>
 <ol>
 <li><strong>Soft voting, LR + RF + HGB</strong>: average of predicted probabilities.</li>
@@ -11186,20 +11186,20 @@ Hit rate of a flag: 14.8% vs 4.1% for a random order.
 <div class="jp-InputPrompt jp-InputArea-prompt">In [32]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">single_summary</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_1_tuning_summary.csv"</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">single_summary</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_1_tuning_summary.csv"</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">trials_table</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span>
            <span class="p">[(</span><span class="s2">"LR"</span><span class="p">,</span> <span class="n">lr_search</span><span class="p">),</span> <span class="p">(</span><span class="s2">"RF"</span><span class="p">,</span> <span class="n">rf_search</span><span class="p">),</span> <span class="p">(</span><span class="s2">"HGB"</span><span class="p">,</span> <span class="n">hgb_search</span><span class="p">)]])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-    <span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_1_all_trials.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">compare_summary</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_2_ensemble_comparison.csv"</span><span class="p">)</span>
-<span class="n">paired</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_2_paired_vs_lr.csv"</span><span class="p">)</span>
-<span class="n">month_test</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_1_6_purchase_month.csv"</span><span class="p">)</span>
-<span class="n">headline</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_3_test_results.csv"</span><span class="p">)</span>
-<span class="n">report_only</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_3_test_report_only.csv"</span><span class="p">)</span>
-<span class="n">boot_table</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_3_bootstrap_vs_b1.csv"</span><span class="p">)</span>
-<span class="n">gap_compare</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_3_1_gap_comparison.csv"</span><span class="p">)</span>
-<span class="n">monthly</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_3_monthly.csv"</span><span class="p">)</span>
-<span class="n">perm_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_5_4_permutation_importance.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"tasnim_best_params.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_1_all_trials.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">compare_summary</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_2_ensemble_comparison.csv"</span><span class="p">)</span>
+<span class="n">paired</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_2_paired_vs_lr.csv"</span><span class="p">)</span>
+<span class="n">month_test</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_1_6_purchase_month.csv"</span><span class="p">)</span>
+<span class="n">headline</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_3_test_results.csv"</span><span class="p">)</span>
+<span class="n">report_only</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_3_test_report_only.csv"</span><span class="p">)</span>
+<span class="n">boot_table</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_3_bootstrap_vs_b1.csv"</span><span class="p">)</span>
+<span class="n">gap_compare</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_3_1_gap_comparison.csv"</span><span class="p">)</span>
+<span class="n">monthly</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_3_monthly.csv"</span><span class="p">)</span>
+<span class="n">perm_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"5_4_permutation_importance.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">OUT_DIR</span> <span class="o">/</span> <span class="s2">"best_params.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">"final_model"</span><span class="p">:</span> <span class="n">FINAL_NAME</span><span class="p">,</span> <span class="s2">"drop_purchase_month"</span><span class="p">:</span> <span class="n">DROP_MONTH</span><span class="p">,</span>
                <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">"item"</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
                   <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">best_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}},</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
@@ -11217,7 +11217,7 @@ Hit rate of a flag: 14.8% vs 4.1% for a random order.
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Saved to reports/figures/outputs and reports/figures/tasnim
+<pre>Saved to reports/outputs and reports/figures/fine_tune
 Notebook runtime: 93.9 min
 </pre>
 </div>

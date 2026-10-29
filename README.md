@@ -74,7 +74,7 @@ The metric that matches how the team would actually work is recall in the top 10
 
 Accuracy is not useful here. Predicting "on time" for every order gives 95.9% accuracy on our test set and catches no late orders at all.
 
-Every model is scored with the same code (`src/evaluation.py`) using 5-fold time-series cross-validation on the training period, reported as mean and standard deviation. The test set is used once, at the end.
+Every model is scored with the same 5-fold time-series cross-validation on the training period (`TimeSeriesSplit` with a 2,000-order gap, defined in `src/evaluation.py`), reported as mean and standard deviation. Notebooks 04a and 04b write out their own copy of the same splitter and metrics; their numbers match the shared code (notebook 05 re-scores the three shortlisted models with `src/evaluation.py` and gets the same PR-AUC to within 0.001). The test set is used once, at the end.
 
 ### 1.7 Baselines
 
@@ -272,7 +272,7 @@ On top of the column checks, leakage is controlled by the time split (D6), a 2,0
 
 ## 4. Measure and Compare Performance
 
-All models use the section 3 pipeline and the same 5 time-series folds (`src/evaluation.py`), on the training period only.
+All models use the section 3 pipeline and the same 5 time-series folds as `src/evaluation.py`, on the training period only.
 
 ### 4.1 Model comparison
 
@@ -295,6 +295,7 @@ The PR-AUC spread is large because fold late rates range from 2.8% to 18.8% (2.2
 - **Linear models lead,** and only by a little over B1. Promised days and customer state already carry most of the signal.
 - **Tree models start below B1** on default settings. They overfit: their lift on training folds was 6 to 12 times their validation lift (5.1).
 - **Naive Bayes and a single decision tree are the weakest.**
+- **Gradient boosting** uses scikit-learn's `HistGradientBoostingClassifier`, its histogram-based version of the boosted trees covered in class, modelled on LightGBM. It runs inside the same pipeline and folds as every other model.
 
 ### 4.2 Most important variables
 
@@ -309,7 +310,9 @@ Notebook: `notebooks/04b_interpretation_and_errors.ipynb` (Jingyu Wu). Logistic 
 | Seller state | 0.017 |
 | Every other feature | under 0.01 |
 
-The largest coefficients point the same way. Alagoas (+0.90) and Rio de Janeiro (+0.58) raise the risk, Paraná (−0.73) and Minas Gerais (−0.68) lower it, and a longer promise lowers it (−0.71 per standard deviation). This matches the EDA ranking in 2.1: geography and the promise, not the product.
+The largest coefficients need more care. Alagoas (+0.90) and Rio de Janeiro (+0.58) raise the risk, Paraná (−0.73) and Minas Gerais (−0.68) lower it, and a longer promise lowers it (−0.71 per standard deviation). But three of the four largest coefficients belong to product categories: audio (+0.81), home appliances (−0.80) and luggage accessories (−0.75). Each of these is under 1.2% of training orders (231 to 767 orders), so those coefficients rest on small groups, and shuffling the whole category column lowers PR-AUC by only 0.009. Permutation importance is the better guide to what the model relies on, and it matches the EDA ranking in 2.1: geography and the promise, not the product.
+
+The random forest and HistGB were checked the same way (04b, section 4.3.5). All three models rely on the same four variables: customer state, promised days, same-state share and distance. HistGB also uses freight, which is mostly priced on distance. Product category, price, weight and purchase time are close to zero for all three.
 
 ### 4.3 Error analysis
 
@@ -324,7 +327,7 @@ Same model and fold. Flagging the riskiest 10% (1,068 of 10,673 orders):
 
 - **The missed late orders are the "ordinary" ones.** Compared with the late orders that were caught, they travel shorter distances (727 km vs 1,011 km), are more often within the same state (share 0.21 vs 0.00), and are cheaper (R$125 vs R$183, freight R$23 vs R$35). Nothing about the order itself looked risky.
 - **The false alarms are long-distance, cross-state orders** (1,172 km vs 519 km for correctly ignored orders, same-state share 0.06 vs 0.42) that arrived on time anyway.
-- **The three shortlisted models fail in a similar but not identical way.** Logistic regression (PR-AUC 0.356) beats random forest (0.311) and gradient boosting (0.304). All three miss 1,331 of the 2,011 late orders (66.2%). Between them they catch 680 (33.8%), and each catches some the others miss (163, 60 and 72 orders). That overlap is what made ensembles worth testing in 5.2.
+- **The three shortlisted models fail in a similar but not identical way.** Logistic regression (PR-AUC 0.356) beats random forest (0.311) and gradient boosting (0.304). All three miss 1,331 of the 2,011 late orders (66.2%). Part of this is the budget, not the models: 10% of this fold is 1,068 orders against 2,011 late ones, so even a perfect ranking would miss at least 943 of them (47%). Between them they catch 680 (33.8%), and each catches some the others miss (163, 60 and 72 orders). That overlap is what made ensembles worth testing in 5.2.
 
 **What would a person have used to catch the missed orders?** This fold is the February to March 2018 slowdown, when delivery times stretched across the whole network. The missed orders look ordinary, so their lateness came from the period, not the order. A person would have needed information the model does not have at approval:
 - whether the seller handed the parcel to the carrier on time (the dispatch scan, and the seller's deadline `shipping_limit_date`)
@@ -375,6 +378,8 @@ Following the checklist, data-preparation choices were tuned as hyperparameters 
 - class weighting
 - native categorical splits for HistGB
 - dropping `purchase_month`
+
+We did not try SMOTE or other resampling. Class weighting, which also makes late orders count more in training, made no difference to the ranking: weighted and unweighted settings were mixed together among the best logistic regression trials. Resampling was therefore not expected to help a ranking metric.
 
 Before tuning, the tree models overfit heavily. Their lift on training folds was 6 to 12 times their lift on validation folds, against 1.5 for logistic regression. The tree search spaces therefore focused on regularisation.
 
@@ -495,7 +500,7 @@ The scores should be used as a ranking, not as probabilities. The model learned 
 | Gains from tuning and ensembles are within the CV noise. | The choice among the top few models is uncertain. | Track monthly lift and recall; re-compare logistic regression and the LR + HistGB vote on new data. |
 | The test window is four months and includes Brazil's May 2018 truck drivers' strike. | Test results carry real uncertainty (bootstrap intervals in 5.3). | Retrain quarterly and monitor monthly. |
 | 3 distances over 4,500 km and 16 zero volumes were left in. | 19 orders (0.03%); no visible effect on results. | Set them to missing before imputation. |
-| Random forest results vary slightly between machines (parallel training). | Error-overlap counts in 4.3 shift by a few orders; conclusions do not change. | Fix the number of parallel jobs for exact reproducibility. |
+| Random forest results vary slightly between machines (parallel training). | Error-overlap counts in 4.3 and the random forest importances in 4.3.5 shift slightly; conclusions do not change. | Fix the number of parallel jobs for exact reproducibility. |
 
 ## How to run it
 
@@ -511,7 +516,7 @@ python scripts/build_olist_model_table.py
 python -m pytest -q
 ```
 
-Then run the notebooks in `notebooks/` in order, from 01 to 05. Everything is rebuilt from the files in `data/raw/`. Notebook 05 takes about 1.5 hours because of the hyperparameter search. `notebooks/05_fine_tune.html` shows its full results without running it.
+Then run the notebooks in `notebooks/` in order, from 01 to 05. Notebook 01 writes `data/processed/olist_final.csv`, which notebooks 02 to 05 read, so everything is rebuilt from the files in `data/raw/`. Notebook 05 takes about 1.5 hours because of the hyperparameter search. `notebooks/05_fine_tune.html` shows its full results without running it.
 
 ## Repo layout
 
@@ -532,11 +537,12 @@ olist-late-delivery/
 │   ├── config.py         paths, dates, seeds, banned columns
 │   ├── data.py           loading, target, filters, time split
 │   ├── integration.py    joins approved candidate features
-│   └── evaluation.py     metrics and cross-validation used by every model
+│   └── evaluation.py     shared metrics and cross-validation
 ├── tests/                checks for the target, split, integration and metrics
 ├── notebooks/            one notebook per section, run in order
 ├── reports/
 │   ├── eda_*.csv         profiling table and data-quality issues
-│   └── figures/          figures for the README and slides
+│   ├── outputs/          tables saved by notebook 05 (tuning, ensembles, test results)
+│   └── figures/          figures for the README and slides; fine_tune/ holds notebook 05's
 └── slides/
 ```

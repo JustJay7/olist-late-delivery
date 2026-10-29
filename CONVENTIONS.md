@@ -101,7 +101,7 @@ Our main metric is **PR-AUC**, and we also care about how many late deliveries a
 
 For hyperparameter tuning, use PR-AUC as the selection metric (`refit="pr_auc"`).
 
-MLflow is available for tracking model experiments if you're using it, but you don't need to set it up just to contribute a notebook. At minimum, record the model settings and evaluation results so they can be reproduced in the final notebook.
+At minimum, record the model settings and evaluation results so they can be reproduced in the final notebook.
 
 ## 6. Graphs and write-ups
 
@@ -116,7 +116,7 @@ All numbers in the final README and presentation should come from the final note
 
 ## 7. Putting everything together
 
-Once everyone has uploaded their sections, I'll combine the code, graphs, and explanations into `notebooks/olist_late_delivery.ipynb` and update the README.
+Each section stays in its own numbered notebook in `notebooks/`, and the README brings the results together.
 
 We'll finalize the features and model comparisons before running the final test evaluation.
 

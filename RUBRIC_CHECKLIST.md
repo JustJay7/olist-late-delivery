@@ -15,7 +15,7 @@ Status: `todo` / `draft` / `done`
 |---|---|---|---|
 | GitHub repo link to project | Repo `README.md` | Jay | done |
 | Comments explaining Frame, Explore, Prepare, Measure and compare, Fine-Tune | `README.md` sections 1 to 5, plus one notebook per section in `notebooks/` | Jay | done |
-| Slides | `slides/` | Peace | todo |
+| Slides | `slides/olist_late_delivery_presentation.pptx` | Peace | done |
 | Notebooks with results, all member names | `notebooks/` (05 also as `.html`); names and roles in `README.md` | Jay | done |
 | Raw dataset as CSV (syllabus) | `data/raw/` | Jay | done |
 | Reproducible from raw data + notebooks | Fresh clone: notebooks 01 to 04c re-run and match; 05 paths checked (full run takes about 1.5 hours) | Jay | done |
@@ -76,11 +76,11 @@ Status: `todo` / `draft` / `done`
 
 | Excellent band item | Where | Owner | Status |
 |---|---|---|---|
-| Opens with the problem, why it matters, who it serves | Slides 1 to 2 (content from README 1) | Peace | todo |
-| Explains how the project and dataset meet the objective | Slide 3 | Peace | todo |
-| End-to-end process, concise | Slides 4 to 8 | Peace | todo |
-| Interesting findings noticed along the way | Slides 5, 9 | Peace | todo |
-| What worked and what did not, with explanations | Slide 7 | Peace | todo |
-| Specific assumptions and limitations, with impact and fix | Slide 10 (content from README 7) | Peace, Jay | todo |
-| Clear storyline, labelled visuals, memorable takeaways | Whole deck | Peace | todo |
+| Opens with the problem, why it matters, who it serves | Slides 2 to 3 | Peace | done |
+| Explains how the project and dataset meet the objective | Slides 4 to 5 | Peace | done |
+| End-to-end process, concise | Slides 6 to 10 | Peace | done |
+| Interesting findings noticed along the way | Slides 7, 9, 11 | Peace | done |
+| What worked and what did not, with explanations | Slides 9, 13 | Peace | done |
+| Specific assumptions and limitations, with impact and fix | Slide 12 | Peace, Jay | done |
+| Clear storyline, labelled visuals, memorable takeaways | Whole deck | Peace | done |
 | Fits the time limit (10 min) | Two timed rehearsals | Peace | todo |
