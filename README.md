@@ -546,3 +546,5 @@ olist-late-delivery/
 │   └── figures/          figures for the README and slides; fine_tune/ holds notebook 05's
 └── slides/
 ```
+
+Claude (Anthropic) was used to help review and edit a few parts of this project :)
